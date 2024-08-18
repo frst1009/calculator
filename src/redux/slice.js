@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { evaluate } from "mathjs";
+import { evaluate, log } from "mathjs";
 
 const storedHistory = localStorage.getItem("history");
 const parsedHistory = storedHistory ? JSON.parse(storedHistory) : [];
@@ -17,13 +17,35 @@ export const calcSlice = createSlice({
   initialState,
   reducers: {
     addText: (state, action) => {
-      if (action.payload.type === "operation" && state.result !== 0) {
-        state.operation = `${state.result}`;
-      }
+      // if (action.payload.type === "operation" && state.result !== 0) {
+      //   state.operation = `${state.result}`;
+      // }
+  
+      // if(state.operation.slice(0, -1)){
+
+      // }
       state.result = 0;
-      state.operation += action.payload.name;
+      const { type, name } = action.payload;
+      
+      if (type === "operation") {
+        // Check if the last character in the operation is an operator
+        const lastChar = state.operation.slice(-1);
+        console.log(state.operation.slice(-1));
+        if (lastChar === "+" || lastChar === "-" || lastChar === "*" || lastChar === "/" || lastChar === ".") {
+          // If the last character is an operator, replace it with the new operator
+          state.operation = state.operation.slice(0, -1) + name;
+          
+        } else {
+          // If the last character is not an operator, append the new operator
+          state.operation += name;
+        }
+      } else if (type === "number") {
+      state.operation += name;
+      }
+
+    
     },
-    toCalculate: (state) => {
+    calculate: (state) => {
       try {
         state.result = evaluate(state.operation);
 
@@ -48,18 +70,13 @@ export const calcSlice = createSlice({
       state.lastOperation = "";
       state.result = 0;
     },
-    clearHistory: (state) => {
-      state.history = [];
-      localStorage.setItem("history", JSON.stringify([]));
-    },
   },
 });
 
 export const {
   addText,
-  toCalculate,
+  calculate,
   resetCalculate,
-  clearHistory,
 } = calcSlice.actions;
 
 export default calcSlice.reducer;

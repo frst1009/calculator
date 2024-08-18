@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
-import { addText, resetCalculate, toCalculate } from '../redux/slice';
+import { addText, resetCalculate, calculate } from '../redux/slice';
 import Input from './Input';
 import History from './History';
 
@@ -67,7 +67,7 @@ function Calculator({ isDarkMode, setMode }) {
              <div  className='name'><button className={`${isDarkMode ? 'dark-button' : 'light-button'}`}  onClick={handleButtonClick} name="3">3</button></div>
              <div  className='name'><button className={`${isDarkMode ? 'dark-button' : 'light-button'}`}  color='golden'
                onClick={() => {
-                dispatch(toCalculate());
+                dispatch(calculate());
               }}
              name="=">=</button></div>
             <div  className='name'> <button  className={`${isDarkMode ? 'dark-button' : 'light-button'}`} onClick={handleButtonClick} name="0">0</button></div> 
